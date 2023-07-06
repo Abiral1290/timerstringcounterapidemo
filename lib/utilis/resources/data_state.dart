@@ -1,20 +1,20 @@
 import 'package:dio/dio.dart';
 
-abstract class DataState<T>{
+abstract class DataState<T> {
   final T? data;
-  final DioException? error;
+  final DioError? error;
 
-  const DataState({this.data,this.error});
-
+  const DataState({this.data, this.error});
 }
 
-class DataSucess<T> extends DataState{
-  const DataSucess(T data): super(data: data);
+class DataSuccess<T> extends DataState<T> {
+  const DataSuccess(T data) : super(data: data);
 }
 
-class DataFailed<T> extends DataState{
-  const DataFailed(DioException exception): super(error: exception);
+class DataFailed<T> extends DataState<T> {
+  const DataFailed(DioError error) : super(error: error);
 }
+
 class DataNotSet<T> extends DataState<T> {
   const DataNotSet();
 }

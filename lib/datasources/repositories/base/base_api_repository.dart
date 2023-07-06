@@ -1,9 +1,10 @@
-import 'dart:async';
-import 'dart:html';
+// ignore_for_file: depend_on_referenced_packages
 
+import 'dart:developer';
+import 'dart:io' show HttpStatus;
 import 'package:dio/dio.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:retrofit/dio.dart';
+import 'package:meta/meta.dart';
+import 'package:retrofit/retrofit.dart';
 
 import '../../../utilis/resources/data_state.dart';
 
@@ -11,19 +12,22 @@ abstract class BaseApiRepository{
 
   @protected
   Future<DataState<T>> getStateOf<T>({
-    required Future<HttpResponse<T>?>? Function()  request,
-  }) async{
-    try{
+    required Future<HttpResponse<T>?>? Function() request,
+  }) async {
+    try {
+
       final httpResponse = await request();
-      if(httpResponse.response.statusCode == HttpStatus.ok){
-        return DataSucess(httpResponse.data);
-      }else{
-        throw DioException.connectionError(
-            requestOptions: httpResponse.response.requestOptions,
-            reason: httpResponse.response);
+      log(' my listsss${httpResponse!.data.toString()}');
+      if (httpResponse.response.statusCode == HttpStatus.ok) {
+        return DataSuccess(httpResponse.data!);
+      } else {
+        throw DioError(
+          response: httpResponse.response,
+          requestOptions: httpResponse.response.requestOptions,
+        );
       }
-  }on DioException catch (error){
+    } on DioError catch (error) {
       return DataFailed(error);
     }
-}
+  }
 }
